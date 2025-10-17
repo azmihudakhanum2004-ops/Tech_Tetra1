@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EcoLearn - Gamified Environmental Education</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/animations.css') }}">
+    <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='images/logo.png') }}">
+</head>
+<body>
+    <!-- Eco Animation Background -->
+    <div class="eco-animation"></div>
+
+    <!-- Header -->
+    <header>
+        <div class="container">
+            <nav>
+                <div class="logo">
+                    <div class="logo-icon">🌱</div>
+                    <span>EcoLearn</span>
+                </div>
+                <ul class="nav-links">
+                    <li><a href="{{ url_for('index') }}">Home</a></li>
+                    <li><a href="{{ url_for('lessons') }}">Lessons</a></li>
+                    <li><a href="{{ url_for('challenges') }}">Challenges</a></li>
+                    <li><a href="{{ url_for('leaderboard') }}">Leaderboard</a></li>
+                    <li><a href="{{ url_for('rewards') }}">Rewards</a></li>
+                    {% if session.user_id %}
+                    <li><a href="{{ url_for('dashboard') }}">Dashboard</a></li>
+                    {% endif %}
+                </ul>
+                <div class="auth-buttons">
+                    {% if session.user_id %}
+                    <span style="color: white; margin-right: 1rem;">Welcome, {{ session.username }}!</span>
+                    <a href="{{ url_for('logout') }}" class="btn btn-secondary">Logout</a>
+                    {% else %}
+                    <a href="{{ url_for('login') }}" class="btn btn-secondary">Login</a>
+                    <a href="{{ url_for('register') }}" class="btn btn-primary">Sign Up</a>
+                    {% endif %}
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Flash Messages -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            <div class="container">
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ category }}">{{ message }}</div>
+                {% endfor %}
+            </div>
+        {% endif %}
+    {% endwith %}
+
+    <!-- Main Content -->
+    <main>
+        {% block content %}{% endblock %}
+    </main>
+
+    <!-- Footer -->
+    <footer style="background: var(--dark-green); color: white; padding: 2rem 0; margin-top: 4rem;">
+        <div class="container">
+            <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap;">
+                <div class="logo">
+                    <div class="logo-icon">🌱</div>
+                    <span>EcoLearn</span>
+                </div>
+                <div style="text-align: center;">
+                    <p>Making Environmental Education Fun and Impactful</p>
+                    <p style="font-size: 0.9rem; opacity: 0.8;">&copy; 2024 EcoLearn. All rights reserved.</p>
+                </div>
+                <div style="display: flex; gap: 1rem;">
+                    <a href="#" style="color: white; text-decoration: none;">Privacy Policy</a>
+                    <a href="#" style="color: white; text-decoration: none;">Terms of Service</a>
+                    <a href="#" style="color: white; text-decoration: none;">Contact</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JavaScript -->
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+    {% block scripts %}{% endblock %}
+</body>
+</html>

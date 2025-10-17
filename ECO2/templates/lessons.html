@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+    <h1 style="margin-bottom: 2rem; color: var(--dark-green);">Environmental Lessons</h1>
+
+    <div class="lessons-grid">
+        {% for lesson in lessons %}
+        <div class="lesson-card hover-lift" data-animate="fade-in">
+            <div class="lesson-header">
+                <h3 class="lesson-title">{{ lesson.title }}</h3>
+                <span class="difficulty {{ lesson.difficulty }}">{{ lesson.difficulty|title }}</span>
+            </div>
+
+            <p class="lesson-description">{{ lesson.description }}</p>
+
+            <div class="lesson-meta" style="display: flex; justify-content: space-between; margin: 1rem 0;">
+                <span style="color: var(--primary-green); font-weight: bold;">{{ lesson.points_reward }} points</span>
+                <span style="color: var(--earth-blue);">{{ lesson.category|title }}</span>
+            </div>
+
+            {% if user_progress.get(lesson.id) %}
+            <div class="progress-bar">
+                <div class="progress-fill" data-progress="100" style="width: 100%;"></div>
+            </div>
+            <div style="text-align: center;">
+                <span style="color: var(--primary-green); font-weight: bold;">✓ Completed</span>
+            </div>
+            {% else %}
+            <div class="progress-bar">
+                <div class="progress-fill" data-progress="0" style="width: 0%;"></div>
+            </div>
+            {% endif %}
+
+            <div style="text-align: center; margin-top: 1rem;">
+                {% if user_progress.get(lesson.id) %}
+                <a href="{{ url_for('quiz', lesson_id=lesson.id) }}" class="btn btn-secondary" style="width: 100%;">Retake Quiz</a>
+                {% else %}
+                <a href="{{ url_for('lesson_detail', lesson_id=lesson.id) }}" class="btn btn-primary" style="width: 100%;">Start Lesson</a>
+                {% endif %}
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Initialize progress bars
+        const progressBars = document.querySelectorAll('.progress-fill');
+        progressBars.forEach(bar => {
+            const progress = bar.getAttribute('data-progress');
+            setTimeout(() => {
+                bar.style.width = progress + '%';
+            }, 100);
+        });
+    });
+</script>
+{% endblock %}

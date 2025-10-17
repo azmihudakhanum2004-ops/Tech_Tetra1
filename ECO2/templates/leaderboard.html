@@ -1,0 +1,113 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+    <h1 style="margin-bottom: 2rem; color: var(--dark-green);">EcoLearn Leaderboard</h1>
+
+    <!-- Individual Leaderboard -->
+    <div class="leaderboard" data-animate="fade-in">
+        <h2 style="margin-bottom: 1rem; color: var(--dark-green);">Top Eco Warriors</h2>
+
+        <table class="leaderboard-table">
+            <thead>
+                <tr>
+                    <th>Rank</th>
+                    <th>Student</th>
+                    <th>School</th>
+                    <th>Points</th>
+                    <th>Badges</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for user in top_users %}
+                <tr class="rank-{{ loop.index }}">
+                    <td>
+                        {% if loop.index == 1 %}🥇
+                        {% elif loop.index == 2 %}🥈
+                        {% elif loop.index == 3 %}🥉
+                        {% else %}#{{ loop.index }}
+                        {% endif %}
+                    </td>
+                    <td>{{ user.username }}</td>
+                    <td>{{ user.school or 'Not specified' }}</td>
+                    <td style="font-weight: bold; color: var(--primary-green);">{{ user.points }}</td>
+                    <td>
+                        {% set badge_count = (user.points / 100)|int %}
+                        {% for i in range(badge_count) %}
+                        ⭐
+                        {% endfor %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <!-- School Leaderboard -->
+    <div class="leaderboard" data-animate="fade-in" style="margin-top: 3rem;">
+        <h2 style="margin-bottom: 1rem; color: var(--dark-green);">Top Schools</h2>
+
+        <table class="leaderboard-table">
+            <thead>
+                <tr>
+                    <th>Rank</th>
+                    <th>School</th>
+                    <th>Total Points</th>
+                    <th>Students</th>
+                    <th>Impact Level</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for school in school_rankings %}
+                <tr class="rank-{{ loop.index }}">
+                    <td>
+                        {% if loop.index == 1 %}🏆
+                        {% elif loop.index == 2 %}🥈
+                        {% elif loop.index == 3 %}🥉
+                        {% else %}#{{ loop.index }}
+                        {% endif %}
+                    </td>
+                    <td>{{ school.school }}</td>
+                    <td style="font-weight: bold; color: var(--primary-green);">{{ school.total_points }}</td>
+                    <td>{{ (school.total_points / 100)|int + 5 }}</td>
+                    <td>
+                        {% if school.total_points > 5000 %}🌍 Planet Hero
+                        {% elif school.total_points > 2000 %}🌱 Eco Champion
+                        {% elif school.total_points > 1000 %}💚 Green Leader
+                        {% else %}🌿 Rising Star
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Impact Statistics -->
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem; margin-top: 3rem;">
+        <div class="stat-card" data-animate="fade-in">
+            <h3>Total Impact</h3>
+            <div class="stat-number">1,247</div>
+            <p>Trees Planted</p>
+        </div>
+
+        <div class="stat-card" data-animate="fade-in" style="animation-delay: 0.1s;">
+            <h3>Waste Reduced</h3>
+            <div class="stat-number">5.2T</div>
+            <p>Kilograms of Plastic</p>
+        </div>
+
+        <div class="stat-card" data-animate="fade-in" style="animation-delay: 0.2s;">
+            <h3>Energy Saved</h3>
+            <div class="stat-number">12.4K</div>
+            <p>Kilowatt Hours</p>
+        </div>
+
+        <div class="stat-card" data-animate="fade-in" style="animation-delay: 0.3s;">
+            <h3>Water Conserved</h3>
+            <div class="stat-number">8.7K</div>
+            <p>Liters of Water</p>
+        </div>
+    </div>
+</div>
+{% endblock %}

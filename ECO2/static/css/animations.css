@@ -1,0 +1,285 @@
+/* EcoLearn Animation Styles */
+
+/* Badge Earned Animation */
+.badge-earned {
+    animation: badge-glow 2s ease-in-out infinite alternate;
+}
+
+@keyframes badge-glow {
+    from {
+        box-shadow: 0 0 20px rgba(76, 175, 80, 0.3);
+        transform: scale(1);
+    }
+    to {
+        box-shadow: 0 0 30px rgba(76, 175, 80, 0.6);
+        transform: scale(1.05);
+    }
+}
+
+/* Button Hover Effects */
+.btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+/* Card Hover Effects */
+.hover-lift:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+}
+
+/* Progress Bar Animation */
+.progress-fill {
+    transition: width 1s ease-in-out;
+}
+
+/* Floating Elements */
+.floating {
+    animation: floating 3s ease-in-out infinite;
+}
+
+@keyframes floating {
+    0%, 100% {
+        transform: translateY(0px);
+    }
+    50% {
+        transform: translateY(-10px);
+    }
+}
+
+/* Pulse Animation for CTAs */
+.btn-pulse {
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.05);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
+/* Fade In Animation */
+@keyframes fade-in {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+[data-animate="fade-in"] {
+    animation: fade-in 0.8s ease-out;
+}
+
+/* Slide In Animation */
+@keyframes slide-in {
+    from {
+        opacity: 0;
+        transform: translateX(-50px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+[data-animate="slide-in"] {
+    animation: slide-in 0.8s ease-out;
+}
+
+/* Grow Animation */
+@keyframes grow {
+    from {
+        opacity: 0;
+        transform: scale(0.8);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+[data-animate="grow"] {
+    animation: grow 0.8s ease-out;
+}
+
+/* Eco Background Animation */
+.eco-animation::before,
+.eco-animation::after {
+    content: '';
+    position: absolute;
+    border-radius: 50%;
+    background: rgba(46, 139, 87, 0.1);
+    animation: float 20s infinite linear;
+}
+
+.eco-animation::before {
+    width: 200px;
+    height: 200px;
+    top: 10%;
+    left: 10%;
+    animation-delay: 0s;
+}
+
+.eco-animation::after {
+    width: 150px;
+    height: 150px;
+    top: 60%;
+    right: 10%;
+    animation-delay: 10s;
+}
+
+@keyframes float {
+    0% {
+        transform: translateY(0px) rotate(0deg);
+    }
+    100% {
+        transform: translateY(-100vh) rotate(360deg);
+    }
+}
+
+/* Loading Animation */
+.loading {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    border: 3px solid rgba(46, 139, 87, 0.3);
+    border-radius: 50%;
+    border-top-color: var(--primary-green);
+    animation: spin 1s ease-in-out infinite;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* Success Animation */
+.success-checkmark {
+    animation: checkmark 0.8s ease-in-out;
+}
+
+@keyframes checkmark {
+    0% {
+        transform: scale(0) rotate(45deg);
+        opacity: 0;
+    }
+    50% {
+        transform: scale(1.2) rotate(45deg);
+        opacity: 1;
+    }
+    100% {
+        transform: scale(1) rotate(45deg);
+        opacity: 1;
+    }
+}
+
+/* Error Shake Animation */
+.error-shake {
+    animation: shake 0.5s ease-in-out;
+}
+
+@keyframes shake {
+    0%, 100% {
+        transform: translateX(0);
+    }
+    25% {
+        transform: translateX(-10px);
+    }
+    75% {
+        transform: translateX(10px);
+    }
+}
+
+/* Quiz Option Selection */
+.quiz-option.selected {
+    animation: option-select 0.3s ease-out;
+}
+
+@keyframes option-select {
+    0% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.05);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
+/* Challenge Join Animation */
+.challenge-joined {
+    animation: challenge-join 0.6s ease-out;
+}
+
+@keyframes challenge-join {
+    0% {
+        transform: scale(1);
+        background-color: white;
+    }
+    50% {
+        transform: scale(1.1);
+        background-color: #E8F5E8;
+    }
+    100% {
+        transform: scale(1);
+        background-color: #E8F5E8;
+    }
+}
+
+/* Points Earned Animation */
+.points-earned {
+    animation: points-float 1s ease-out forwards;
+}
+
+@keyframes points-float {
+    0% {
+        transform: translateY(0px);
+        opacity: 1;
+    }
+    100% {
+        transform: translateY(-50px);
+        opacity: 0;
+    }
+}
+
+/* Staggered Animation Delays */
+.stagger-1 { animation-delay: 0.1s; }
+.stagger-2 { animation-delay: 0.2s; }
+.stagger-3 { animation-delay: 0.3s; }
+.stagger-4 { animation-delay: 0.4s; }
+.stagger-5 { animation-delay: 0.5s; }
+
+/* Mobile Animation Adjustments */
+@media (max-width: 768px) {
+    .eco-animation::before,
+    .eco-animation::after {
+        display: none; /* Disable floating elements on mobile for performance */
+    }
+
+    [data-animate] {
+        animation-duration: 0.5s; /* Faster animations on mobile */
+    }
+}
+
+/* Reduced Motion Support */
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+}

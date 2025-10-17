@@ -1,0 +1,145 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+    <h1 style="margin-bottom: 1rem; color: var(--dark-green);">Your Rewards & Badges</h1>
+
+    <!-- User Points Summary -->
+    <div class="stat-card" data-animate="fade-in" style="text-align: center; margin-bottom: 2rem;">
+        <h2>Your Eco Points</h2>
+        <div class="stat-number" id="user-points">{{ user.points }}</div>
+        <p>Keep earning points to unlock more badges!</p>
+        <div style="margin-top: 1rem;">
+            <a href="{{ url_for('lessons') }}" class="btn btn-primary">Earn More Points</a>
+        </div>
+    </div>
+
+    <!-- Badges Collection -->
+    <h2 style="margin-bottom: 2rem; color: var(--dark-green);">Badge Collection</h2>
+
+    <div class="badges-grid">
+        {% for badge in badges %}
+        <div class="badge-card hover-lift {% if badge.id in user_badge_ids %}earned{% else %}locked{% endif %}"
+             data-animate="fade-in">
+            <div class="badge-icon">
+                {% if badge.id in user_badge_ids %}⭐{% else %}🔒{% endif %}
+            </div>
+            <h3>{{ badge.name }}</h3>
+            <p>{{ badge.description }}</p>
+            <div style="margin-top: 1rem;">
+                {% if badge.id in user_badge_ids %}
+                <span style="color: var(--primary-green); font-weight: bold;">Earned! 🎉</span>
+                {% else %}
+                <span style="color: #666; font-style: italic;">Locked</span>
+                {% endif %}
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+    <!-- Achievement Progress -->
+    <div style="margin-top: 4rem;">
+        <h2 style="margin-bottom: 2rem; color: var(--dark-green);">Achievement Progress</h2>
+
+        <div class="feature-card" data-animate="fade-in">
+            <h3>Master Eco Warrior</h3>
+            <p>Complete all categories to become a Master Eco Warrior</p>
+
+            <div style="margin: 1.5rem 0;">
+                <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                    <span>Climate Change</span>
+                    <span>3/5 lessons</span>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill" data-progress="60" style="width: 0%;"></div>
+                </div>
+            </div>
+
+            <div style="margin: 1.5rem 0;">
+                <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                    <span>Waste Management</span>
+                    <span>2/4 lessons</span>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill" data-progress="50" style="width: 0%;"></div>
+                </div>
+            </div>
+
+            <div style="margin: 1.5rem 0;">
+                <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                    <span>Biodiversity</span>
+                    <span>1/3 lessons</span>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill" data-progress="33" style="width: 0%;"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Certificate Section -->
+    <div style="margin-top: 4rem; text-align: center;">
+        <h2 style="margin-bottom: 2rem; color: var(--dark-green);">Earn Certificates</h2>
+
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem;">
+            <div class="feature-card" data-animate="fade-in">
+                <h3>🌱 Green Beginner</h3>
+                <p>Complete 5 lessons and earn 200 points</p>
+                {% if user.points >= 200 %}
+                <button class="btn btn-success" style="width: 100%; margin-top: 1rem;">Download Certificate</button>
+                {% else %}
+                <button class="btn btn-secondary" style="width: 100%; margin-top: 1rem;" disabled>
+                    {{ 200 - user.points }} points needed
+                </button>
+                {% endif %}
+            </div>
+
+            <div class="feature-card" data-animate="fade-in" style="animation-delay: 0.1s;">
+                <h3>💚 Eco Champion</h3>
+                <p>Complete 15 lessons and earn 500 points</p>
+                {% if user.points >= 500 %}
+                <button class="btn btn-success" style="width: 100%; margin-top: 1rem;">Download Certificate</button>
+                {% else %}
+                <button class="btn btn-secondary" style="width: 100%; margin-top: 1rem;" disabled>
+                    {{ 500 - user.points }} points needed
+                </button>
+                {% endif %}
+            </div>
+
+            <div class="feature-card" data-animate="fade-in" style="animation-delay: 0.2s;">
+                <h3>🌍 Planet Hero</h3>
+                <p>Complete 30 lessons and earn 1000 points</p>
+                {% if user.points >= 1000 %}
+                <button class="btn btn-success" style="width: 100%; margin-top: 1rem;">Download Certificate</button>
+                {% else %}
+                <button class="btn btn-secondary" style="width: 100%; margin-top: 1rem;" disabled>
+                    {{ 1000 - user.points }} points needed
+                </button>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Initialize progress bars
+        const progressBars = document.querySelectorAll('.progress-fill');
+        progressBars.forEach(bar => {
+            const progress = bar.getAttribute('data-progress');
+            setTimeout(() => {
+                bar.style.width = progress + '%';
+            }, 100);
+        });
+
+        // Add earned badge animations
+        const earnedBadges = document.querySelectorAll('.badge-card.earned');
+        earnedBadges.forEach((badge, index) => {
+            badge.style.animationDelay = (index * 0.2) + 's';
+            badge.classList.add('badge-earned');
+        });
+    });
+</script>
+{% endblock %}

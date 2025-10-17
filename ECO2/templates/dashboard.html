@@ -1,0 +1,163 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+    <h1 style="margin-bottom: 2rem; color: var(--dark-green);">
+        {% if is_teacher %}Teacher Dashboard{% else %}Student Dashboard{% endif %}
+    </h1>
+
+    {% if is_teacher %}
+    <!-- Teacher Dashboard -->
+    <div class="dashboard-stats" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1.5rem; margin-bottom: 3rem;">
+        <div class="stat-card" data-animate="fade-in">
+            <h3>Total Students</h3>
+            <div class="stat-number">{{ student_data|length }}</div>
+        </div>
+
+        <div class="stat-card" data-animate="fade-in" style="animation-delay: 0.1s;">
+            <h3>Average Points</h3>
+            <div class="stat-number">
+                {% set total_points = student_data|sum(attribute='student.points') %}
+                {% set avg_points = total_points / student_data|length if student_data else 0 %}
+                {{ avg_points|int }}
+            </div>
+        </div>
+
+        <div class="stat-card" data-animate="fade-in" style="animation-delay: 0.2s;">
+            <h3>Completed Lessons</h3>
+            <div class="stat-number">
+                {% set total_completed = student_data|sum(attribute='completed_lessons') %}
+                {{ total_completed }}
+            </div>
+        </div>
+
+        <div class="stat-card" data-animate="fade-in" style="animation-delay: 0.3s;">
+            <h3>Active Challenges</h3>
+            <div class="stat-number">
+                {% set total_challenges = student_data|sum(attribute='completed_challenges') %}
+                {{ total_challenges }}
+            </div>
+        </div>
+    </div>
+
+    <!-- Student Progress Table -->
+    <div class="feature-card" data-animate="fade-in">
+        <h2 style="margin-bottom: 1.5rem; color: var(--dark-green);">Student Progress</h2>
+
+        <table class="leaderboard-table">
+            <thead>
+                <tr>
+                    <th>Student</th>
+                    <th>Points</th>
+                    <th>Lessons Completed</th>
+                    <th>Challenges Completed</th>
+                    <th>Progress</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for data in student_data %}
+                <tr>
+                    <td>{{ data.student.username }}</td>
+                    <td style="font-weight: bold; color: var(--primary-green);">{{ data.student.points }}</td>
+                    <td>{{ data.completed_lessons }}</td>
+                    <td>{{ data.completed_challenges }}</td>
+                    <td>
+                        <div class="progress-bar" style="width: 100px;">
+                            <div class="progress-fill" data-progress="{{ (data.completed_lessons / 3 * 100)|int }}" style="width: 0%;"></div>
+                        </div>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    {% else %}
+    <!-- Student Dashboard -->
+    <div class="dashboard-stats" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1.5rem; margin-bottom: 3rem;">
+        <div class="stat-card" data-animate="fade-in">
+            <h3>Your Points</h3>
+            <div class="stat-number">{{ user.points }}</div>
+        </div>
+
+        <div class="stat-card" data-animate="fade-in" style="animation-delay: 0.1s;">
+            <h3>Lessons Completed</h3>
+            <div class="stat-number">{{ completed_lessons }}</div>
+            <p>out of {{ total_lessons }}</p>
+        </div>
+
+        <div class="stat-card" data-animate="fade-in" style="animation-delay: 0.2s;">
+            <h3>Challenges Completed</h3>
+            <div class="stat-number">{{ completed_challenges }}</div>
+            <p>out of {{ total_challenges }}</p>
+        </div>
+
+        <div class="stat-card" data-animate="fade-in" style="animation-delay: 0.3s;">
+            <h3>Current Rank</h3>
+            <div class="stat-number">#12</div>
+            <p>in your school</p>
+        </div>
+    </div>
+
+    <!-- Progress Overview -->
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; margin-bottom: 3rem;">
+        <div class="feature-card" data-animate="fade-in">
+            <h3 style="margin-bottom: 1rem; color: var(--dark-green);">Lesson Progress</h3>
+            <div class="progress-bar" style="margin: 1rem 0;">
+                <div class="progress-fill" data-progress="{{ (completed_lessons / total_lessons * 100)|int }}" style="width: 0%;"></div>
+            </div>
+            <p>{{ completed_lessons }} of {{ total_lessons }} lessons completed</p>
+        </div>
+
+        <div class="feature-card" data-animate="fade-in" style="animation-delay: 0.1s;">
+            <h3 style="margin-bottom: 1rem; color: var(--dark-green);">Challenge Progress</h3>
+            <div class="progress-bar" style="margin: 1rem 0;">
+                <div class="progress-fill" data-progress="{{ (completed_challenges / total_challenges * 100)|int }}" style="width: 0%;"></div>
+            </div>
+            <p>{{ completed_challenges }} of {{ total_challenges }} challenges completed</p>
+        </div>
+    </div>
+
+    <!-- Recent Activity -->
+    <div class="feature-card" data-animate="fade-in">
+        <h3 style="margin-bottom: 1.5rem; color: var(--dark-green);">Recent Activity</h3>
+
+        <div class="activity-list">
+            {% for lesson in recent_lessons %}
+            <div class="activity-item">
+                <div class="activity-icon">📚</div>
+                <div class="activity-content">
+                    <p>Completed lesson: <strong>{{ lesson.lesson.title }}</strong></p>
+                    <small>{{ lesson.completed_at.strftime('%B %d, %Y') }}</small>
+                </div>
+            </div>
+            {% endfor %}
+
+            {% for challenge in recent_challenges %}
+            <div class="activity-item">
+                <div class="activity-icon">🌱</div>
+                <div class="activity-content">
+                    <p>Joined challenge: <strong>{{ challenge.challenge.title }}</strong></p>
+                    <small>{{ challenge.started_at.strftime('%B %d, %Y') }}</small>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <!-- Quick Actions -->
+    <div style="text-align: center; margin-top: 3rem;">
+        <h3 style="margin-bottom: 1.5rem; color: var(--dark-green);">Continue Your Journey</h3>
+        <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
+            <a href="{{ url_for('lessons') }}" class="btn btn-primary">Take a Lesson</a>
+            <a href="{{ url_for('challenges') }}" class="btn btn-secondary">Join a Challenge</a>
+            <a href="{{ url_for('rewards') }}" class="btn btn-success">View Rewards</a>
+        </div>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/dashboard.js') }}"></script>
+{% endblock %}

@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+    <div class="quiz-container" data-lesson-id="{{ lesson.id }}">
+        <h1 style="text-align: center; margin-bottom: 2rem; color: var(--dark-green);">{{ lesson.title }} - Quiz</h1>
+
+        <div class="quiz-progress" style="margin-bottom: 2rem;">
+            <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                <span>Progress</span>
+                <span id="quiz-progress-text">1/{{ quizzes|length }}</span>
+            </div>
+            <div class="progress-bar">
+                <div id="quiz-progress" class="progress-fill" style="width: 0%;"></div>
+            </div>
+        </div>
+
+        <form id="quiz-form">
+            {% for quiz in quizzes %}
+            <div class="quiz-question" data-quiz-id="{{ quiz.id }}" data-correct-answer="{{ quiz.correct_answer }}"
+                 style="display: {% if loop.first %}block{% else %}none{% endif %};">
+                <h3 class="question-text">{{ quiz.question }}</h3>
+
+                <div class="quiz-options">
+                    {% for option in quiz.options %}
+                    <div class="quiz-option" data-value="{{ loop.index0 }}">
+                        {{ option }}
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endfor %}
+
+            <div style="display: flex; justify-content: space-between; margin-top: 2rem;">
+                <button type="button" id="prev-question" class="btn btn-secondary" style="display: none;">Previous</button>
+                <button type="button" id="next-question" class="btn btn-primary" disabled>Next Question</button>
+                <button type="button" id="submit-quiz" class="btn btn-success" style="display: none;">Submit Quiz</button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/quiz.js') }}"></script>
+{% endblock %}

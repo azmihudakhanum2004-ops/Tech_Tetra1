@@ -1,0 +1,140 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+    <h1 style="margin-bottom: 1rem; color: var(--dark-green);">Eco Challenges</h1>
+    <p style="margin-bottom: 2rem; font-size: 1.1rem;">Take action and make a real impact on the environment!</p>
+
+    <!-- Challenge Filters -->
+    <div style="margin-bottom: 2rem;">
+        <button class="btn btn-secondary filter-btn active" onclick="filterChallenges('all')">All Challenges</button>
+        <button class="btn btn-secondary filter-btn" onclick="filterChallenges('conservation')">Conservation</button>
+        <button class="btn btn-secondary filter-btn" onclick="filterChallenges('waste')">Waste Management</button>
+        <button class="btn btn-secondary filter-btn" onclick="filterChallenges('energy')">Energy Saving</button>
+    </div>
+
+    <div class="challenges-grid">
+        {% for challenge in challenges %}
+        <div class="challenge-card hover-lift" data-animate="fade-in"
+             data-challenge-id="{{ challenge.id }}" data-category="{{ challenge.category }}"
+             data-user-status="{{ user_challenges.get(challenge.id, 'not_joined') }}">
+            <div class="challenge-header">
+                <h3 class="challenge-title">{{ challenge.title }}</h3>
+                <span class="challenge-points" style="color: var(--primary-green); font-weight: bold;">
+                    {{ challenge.points_reward }} pts
+                </span>
+            </div>
+
+            <p class="challenge-description">{{ challenge.description }}</p>
+
+            <div class="challenge-meta" style="display: flex; justify-content: space-between; margin: 1rem 0;">
+                <span style="color: var(--earth-blue);">{{ challenge.category|title }}</span>
+                <span style="color: var(--soil-brown);">{{ challenge.duration_days }} days</span>
+            </div>
+
+            {% if user_challenges.get(challenge.id) == 'completed' %}
+            <div style="text-align: center; padding: 0.5rem; background: #E8F5E8; border-radius: 8px; margin: 1rem 0;">
+                <span style="color: var(--primary-green); font-weight: bold;">✓ Challenge Completed!</span>
+            </div>
+            {% elif user_challenges.get(challenge.id) == 'in_progress' %}
+            <div class="challenge-progress" data-days-left="3" data-total-days="{{ challenge.duration_days }}">
+                <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                    <span>Progress</span>
+                    <span>3 days left</span>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill" data-progress="57" style="width: 0%;"></div>
+                </div>
+            </div>
+            {% endif %}
+
+            <div class="challenge-actions" style="text-align: center; margin-top: 1rem;">
+                {% if user_challenges.get(challenge.id) == 'completed' %}
+                <span style="color: var(--primary-green); font-weight: bold;">✓ Completed</span>
+                {% elif user_challenges.get(challenge.id) == 'in_progress' %}
+                <button class="btn btn-success complete-challenge" data-challenge-id="{{ challenge.id }}">
+                    Mark Complete
+                </button>
+                <span style="color: var(--primary-green); font-weight: bold; margin-left: 1rem;">In Progress</span>
+                {% else %}
+                <button class="btn btn-primary join-challenge" data-challenge-id="{{ challenge.id }}">
+                    Join Challenge
+                </button>
+                {% endif %}
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+<!-- Carbon Footprint Calculator -->
+<div class="container" style="margin-top: 4rem;">
+    <div class="feature-card" data-animate="fade-in">
+        <h2 style="text-align: center; margin-bottom: 2rem; color: var(--dark-green);">Carbon Footprint Calculator</h2>
+
+        <form id="carbon-calculator">
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                <div class="form-group">
+                    <label for="electricity">Monthly Electricity (kWh)</label>
+                    <input type="number" id="electricity" name="electricity" min="0" step="10">
+                </div>
+
+                <div class="form-group">
+                    <label for="car_km">Monthly Car Travel (km)</label>
+                    <input type="number" id="car_km" name="car_km" min="0" step="10">
+                </div>
+
+                <div class="form-group">
+                    <label for="bus_km">Monthly Public Transport (km)</label>
+                    <input type="number" id="bus_km" name="bus_km" min="0" step="10">
+                </div>
+
+                <div class="form-group">
+                    <label for="diet">Diet Type</label>
+                    <select id="diet" name="diet">
+                        <option value="average">Average</option>
+                        <option value="vegetarian">Vegetarian</option>
+                        <option value="vegan">Vegan</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="waste">Waste Production</label>
+                    <select id="waste" name="waste">
+                        <option value="low">Low</option>
+                        <option value="medium">Medium</option>
+                        <option value="high">High</option>
+                    </select>
+                </div>
+            </div>
+
+            <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 1rem;">Calculate Footprint</button>
+        </form>
+
+        <div id="carbon-results" style="margin-top: 2rem;"></div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/challenges.js') }}"></script>
+<script>
+    function filterChallenges(category) {
+        const challengeCards = document.querySelectorAll('.challenge-card');
+
+        challengeCards.forEach(card => {
+            if (category === 'all' || card.dataset.category === category) {
+                card.style.display = 'block';
+            } else {
+                card.style.display = 'none';
+            }
+        });
+
+        // Update active filter button
+        document.querySelectorAll('.filter-btn').forEach(btn => {
+            btn.classList.remove('active');
+        });
+        event.target.classList.add('active');
+    }
+</script>
+{% endblock %}
